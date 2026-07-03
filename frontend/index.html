@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>甲骨文AI识别系统</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1>📜 甲骨文AI识别系统</h1>
+            <p class="subtitle">AI赋能文化遗产保护 · 让古老文字焕发新生</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="upload-section">
+            <h2>上传甲骨文图片</h2>
+            
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">📷</div>
+                <p>拖拽图片到此处，或点击上传</p>
+                <input type="file" id="fileInput" accept="image/*" hidden>
+                <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">
+                    选择图片
+                </button>
+            </div>
+
+            <div class="preview-container" id="previewContainer" style="display: none;">
+                <img id="previewImage" alt="预览图片">
+                <button class="btn btn-secondary" onclick="resetUpload()">重新上传</button>
+            </div>
+
+            <div class="actions">
+                <button class="btn btn-primary btn-large" id="predictBtn" onclick="predict()" disabled>
+                    🔍 开始识别
+                </button>
+            </div>
+        </section>
+
+        <section class="result-section" id="resultSection" style="display: none;">
+            <h2>识别结果</h2>
+            
+            <div class="result-card">
+                <div class="character-display">
+                    <span id="resultChar" class="oracle-char"></span>
+                </div>
+                
+                <div class="confidence-bar">
+                    <div class="confidence-label">
+                        <span>置信度</span>
+                        <span id="confidenceValue">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div id="confidenceProgress" class="progress-fill"></div>
+                    </div>
+                </div>
+
+                <div class="story-section">
+                    <h3>📖 字源故事</h3>
+                    <p id="resultStory"></p>
+                </div>
+
+                <div class="predictions-section">
+                    <h3>🔮 其他可能</h3>
+                    <ul id="otherPredictions" class="prediction-list"></ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="classes-section">
+            <h2>支持的甲骨文字</h2>
+            <div id="classesGrid" class="classes-grid">
+            </div>
+        </section>
+
+        <section class="about-section">
+            <h2>🎯 项目介绍</h2>
+            <div class="about-content">
+                <p>本项目利用深度学习技术，实现对甲骨文的智能识别。通过卷积神经网络（CNN）对甲骨文拓片进行特征提取和分类，帮助古文字研究者、考古工作者和广大爱好者快速识别甲骨文字形。</p>
+                
+                <div class="features">
+                    <div class="feature">
+                        <span class="feature-icon">🤖</span>
+                        <h4>AI智能识别</h4>
+                        <p>基于深度学习的图像识别技术</p>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">📚</span>
+                        <h4>字源解析</h4>
+                        <p>提供详细的字源故事和演变历程</p>
+                    </div>
+                    <div class="feature">
+                        <span class="feature-icon">🎨</span>
+                        <h4>文化传承</h4>
+                        <p>助力甲骨文数字化保护与传播</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>© 2026 甲骨文AI识别系统 | 社会公益赛道参赛作品</p>
+            <p class="tech-info">技术栈: FastAPI + PyTorch + 前端原生实现</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
