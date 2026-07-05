@@ -4211,178 +4211,495 @@ var FX={
     c.restore();
   },
   '贝':function(c,p,cx,cy){
-    var a=Math.sin(p*Math.PI);c.save();c.globalAlpha=a;
-    // 贝：海贝（齿贝，古代货币）
+    var a=Math.sin(p*Math.PI);
+    if(a<0.02)return;
+    c.save();c.globalAlpha=a;
+    c.lineCap='round';c.lineJoin='round';
+    // 写意海贝：古代货币齿贝，卵形壳体、齿口纹理、宝光温润
+    // 参考国画贝：墨线勾形、淡墨染体、细笔勾纹
     var bY=cy;
-    var bGrd=c.createRadialGradient(cx-5,bY-5,3,cx,bY,30);
-    bGrd.addColorStop(0,'rgba(240,220,180,0.85)');bGrd.addColorStop(0.5,'rgba(200,170,120,0.7)');bGrd.addColorStop(1,'rgba(120,90,50,0.6)');
-    c.fillStyle=bGrd;c.strokeStyle='rgba(80,55,25,0.7)';c.lineWidth=1.5;
-    c.beginPath();c.moveTo(cx,bY-30-p*8);
-    c.quadraticCurveTo(cx-22,bY-15,cx-18,bY+10);
-    c.quadraticCurveTo(cx-5,bY+25+p*5,cx,bY+25+p*5);
-    c.quadraticCurveTo(cx+5,bY+25+p*5,cx+18,bY+10);
-    c.quadraticCurveTo(cx+22,bY-15,cx,bY-30-p*8);c.closePath();c.fill();c.stroke();
-    // 贝口/齿
-    c.strokeStyle='rgba(100,70,30,0.5)';c.lineWidth=1.2;
-    c.beginPath();c.moveTo(cx,bY-25-p*6);c.lineTo(cx,bY+20+p*4);c.stroke();
-    for(var i=0;i<5;i++){
-      var ty=bY-15+i*8;
-      c.beginPath();c.moveTo(cx-2,ty);c.lineTo(cx-10-i,ty+3);c.stroke();
-      c.beginPath();c.moveTo(cx+2,ty);c.lineTo(cx+10+i,ty+3);c.stroke();
+    // 贝体阴影（地面投影）
+    c.fillStyle='rgba(80,60,30,'+a*0.1+')';
+    c.beginPath();c.ellipse(cx,bY+28,22,4,0,0,Math.PI*2);c.fill();
+    // 贝壳主体（卵形，上尖下圆，淡墨渐变）
+    var bGrd=c.createRadialGradient(cx-3,bY-8,3,cx,bY,32);
+    bGrd.addColorStop(0,'rgba(245,225,185,'+a*0.85+')');
+    bGrd.addColorStop(0.4,'rgba(210,180,130,'+a*0.75+')');
+    bGrd.addColorStop(0.8,'rgba(150,120,70,'+a*0.6+')');
+    bGrd.addColorStop(1,'rgba(100,75,40,'+a*0.5+')');
+    c.fillStyle=bGrd;
+    c.beginPath();
+    c.moveTo(cx,bY-32-p*6); // 顶端尖
+    c.quadraticCurveTo(cx-18,bY-20,cx-20,bY); // 左侧弧
+    c.quadraticCurveTo(cx-18,bY+18,cx-8,bY+25+p*4); // 左下
+    c.quadraticCurveTo(cx,bY+28+p*5,cx+8,bY+25+p*4); // 底
+    c.quadraticCurveTo(cx+18,bY+18,cx+20,bY); // 右下
+    c.quadraticCurveTo(cx+18,bY-20,cx,bY-32-p*6); // 右侧弧
+    c.closePath();c.fill();
+    c.strokeStyle='rgba(60,40,18,'+a*0.8+')';c.lineWidth=1.5;c.stroke();
+    // 贝脊（中央隆起脊线，从顶到底）
+    c.strokeStyle='rgba(80,55,25,'+a*0.6+')';c.lineWidth=1.2;
+    c.beginPath();c.moveTo(cx,bY-30-p*5);
+    c.quadraticCurveTo(cx+1,bY,cx,bY+22+p*3);c.stroke();
+    // 贝齿（口缘齿状纹，左右各5-6齿）
+    c.strokeStyle='rgba(90,65,30,'+a*0.55+')';c.lineWidth=0.9;
+    for(var i=0;i<6;i++){
+      var ty=bY-18+i*7;
+      var tw=8+i*1.5;
+      // 左齿
+      c.beginPath();c.moveTo(cx-3,ty);
+      c.quadraticCurveTo(cx-tw-2,ty+1,cx-tw,ty+3);c.stroke();
+      // 右齿
+      c.beginPath();c.moveTo(cx+3,ty);
+      c.quadraticCurveTo(cx+tw+2,ty+1,cx+tw,ty+3);c.stroke();
     }
-    // 贝光
-    c.strokeStyle='rgba(255,250,230,'+(0.4+Math.sin(p*4)*0.2)+')';c.lineWidth=1;
-    c.beginPath();c.moveTo(cx-8,bY-20);c.quadraticCurveTo(cx-5,bY,cx-8,bY+15);c.stroke();
-    // 金气（货币光泽）
-    var mg=c.createRadialGradient(cx,bY,0,cx,bY,50);
-    mg.addColorStop(0,'rgba(255,220,100,'+a*0.1+')');mg.addColorStop(1,'rgba(255,220,100,0)');
-    c.fillStyle=mg;c.beginPath();c.arc(cx,bY,50,0,Math.PI*2);c.fill();
+    // 贝纹（横向细纹，模拟贝壳生长纹）
+    c.strokeStyle='rgba(100,75,40,'+a*0.3+')';c.lineWidth=0.6;
+    for(var i=0;i<4;i++){
+      var vy=bY-15+i*10;
+      c.beginPath();
+      c.moveTo(cx-15+i*2,vy);
+      c.quadraticCurveTo(cx,vy-2,cx+15-i*2,vy);c.stroke();
+    }
+    // 贝光（左侧高光，温润宝光）
+    c.strokeStyle='rgba(255,245,220,'+(0.35+Math.sin(p*3)*0.15)+')';c.lineWidth=1.2;
+    c.beginPath();c.moveTo(cx-10,bY-22);
+    c.quadraticCurveTo(cx-8,bY-5,cx-10,bY+12);c.stroke();
+    // 货币光泽（金色光晕，暗示古代货币）
+    var mg=c.createRadialGradient(cx,bY,5,cx,bY,45);
+    mg.addColorStop(0,'rgba(255,215,100,'+a*0.12+')');
+    mg.addColorStop(0.6,'rgba(255,200,80,'+a*0.06+')');
+    mg.addColorStop(1,'rgba(255,200,80,0)');
+    c.fillStyle=mg;c.beginPath();c.arc(cx,bY,45,0,Math.PI*2);c.fill();
+    // 串贝暗示（上下两枚小贝，暗示串贝货币）
+    if(p>0.3){
+      var strA=Math.min(1,(p-0.3)*2)*a*0.4;
+      c.fillStyle='rgba(200,170,120,'+strA+')';
+      c.strokeStyle='rgba(80,55,25,'+strA+')';c.lineWidth=0.8;
+      // 上贝
+      c.beginPath();c.ellipse(cx,bY-45,6,8,0,0,Math.PI*2);c.fill();c.stroke();
+      // 下贝
+      c.beginPath();c.ellipse(cx,bY+45,6,8,0,0,Math.PI*2);c.fill();c.stroke();
+      // 串绳
+      c.strokeStyle='rgba(120,80,30,'+strA+')';c.lineWidth=1;
+      c.beginPath();c.moveTo(cx,bY-35);c.lineTo(cx,bY-52);c.stroke();
+      c.beginPath();c.moveTo(cx,bY+35);c.lineTo(cx,bY+52);c.stroke();
+    }
     c.restore();
   },
   '齿':function(c,p,cx,cy){
-    var a=Math.sin(p*Math.PI);c.save();c.globalAlpha=a;
-    // 齿：张口露齿
-    c.strokeStyle='rgba(50,30,15,0.8)';c.lineWidth=2.5;c.lineCap='round';
-    // 口形
-    c.fillStyle='rgba(80,30,20,0.5)';
-    c.beginPath();c.ellipse(cx,cy,35+p*8,25+p*5,0,0,Math.PI*2);c.fill();c.stroke();
-    // 上唇
-    c.fillStyle='rgba(150,100,70,0.6)';
-    c.beginPath();c.ellipse(cx,cy-8,35+p*8,10,0,Math.PI,Math.PI*2);c.fill();c.stroke();
-    // 上排牙齿
-    c.fillStyle='rgba(255,250,230,0.9)';c.strokeStyle='rgba(100,80,50,0.5)';c.lineWidth=0.8;
+    var a=Math.sin(p*Math.PI);
+    if(a<0.02)return;
+    c.save();c.globalAlpha=a;
+    c.lineCap='round';c.lineJoin='round';
+    // 写意张口露齿：上下颌开合、牙齿排列、舌、唇
+    // 参考国画人物：墨线勾口、淡墨染唇、细笔勾齿
+    var jawOpen=10+p*15; // 下颌开合度
+    // 口腔内部（深色）
+    c.fillStyle='rgba(60,20,15,'+a*0.7+')';
+    c.beginPath();
+    c.moveTo(cx-30,cy-5);
+    c.quadraticCurveTo(cx,cy-8-jawOpen*0.3,cx+30,cy-5);
+    c.quadraticCurveTo(cx+35,cy+5,cx+30,cy+10+jawOpen);
+    c.quadraticCurveTo(cx,cy+15+jawOpen*0.5,cx-30,cy+10+jawOpen);
+    c.quadraticCurveTo(cx-35,cy+5,cx-30,cy-5);c.closePath();c.fill();
+    // 上颌/上唇
+    c.fillStyle='rgba(160,100,70,'+a*0.6+')';
+    c.strokeStyle='rgba(60,30,15,'+a*0.8+')';c.lineWidth=1.5;
+    c.beginPath();
+    c.moveTo(cx-32,cy-5);
+    c.quadraticCurveTo(cx-35,cy-15,cx-20,cy-18);
+    c.quadraticCurveTo(cx,cy-20,cx+20,cy-18);
+    c.quadraticCurveTo(cx+35,cy-15,cx+32,cy-5);
+    c.quadraticCurveTo(cx,cy-8,cx-32,cy-5);c.closePath();c.fill();c.stroke();
+    // 下颌/下唇
+    c.fillStyle='rgba(150,90,60,'+a*0.55+')';
+    c.beginPath();
+    c.moveTo(cx-30,cy+10+jawOpen);
+    c.quadraticCurveTo(cx-35,cy+20+jawOpen,cx-15,cy+25+jawOpen);
+    c.quadraticCurveTo(cx,cy+28+jawOpen,cx+15,cy+25+jawOpen);
+    c.quadraticCurveTo(cx+35,cy+20+jawOpen,cx+30,cy+10+jawOpen);
+    c.quadraticCurveTo(cx,cy+15+jawOpen*0.5,cx-30,cy+10+jawOpen);c.closePath();c.fill();c.stroke();
+    // 上排牙齿（6颗，门齿+犬齿+臼齿）
+    c.fillStyle='rgba(255,248,225,'+a*0.95+')';
+    c.strokeStyle='rgba(120,90,50,'+a*0.6+')';c.lineWidth=0.8;
     for(var i=0;i<6;i++){
       var tx=cx-22+i*9;
-      c.beginPath();c.moveTo(tx,cy-10);c.lineTo(tx+3,cy-2);c.lineTo(tx+7,cy-10);c.closePath();c.fill();c.stroke();
+      var tw=3+Math.abs(i-2.5)*0.5; // 中间门齿宽
+      var th=8+Math.abs(i-2.5)*1.5; // 犬齿稍长
+      c.beginPath();
+      c.moveTo(tx,cy-6);
+      c.lineTo(tx-tw,cy-6+th);
+      c.lineTo(tx+tw,cy-6+th);
+      c.closePath();c.fill();c.stroke();
     }
-    // 下排牙齿
+    // 下排牙齿（6颗，与上排交错）
     for(var i=0;i<6;i++){
-      var tx2=cx-20+i*8;
-      c.beginPath();c.moveTo(tx2,cy+5);c.lineTo(tx2+3,cy+15+p*2);c.lineTo(tx2+6,cy+5);c.closePath();c.fill();c.stroke();
+      var tx=cx-20+i*8;
+      var tw=2.5+Math.abs(i-2.5)*0.4;
+      var th=7+Math.abs(i-2.5)*1.2;
+      c.beginPath();
+      c.moveTo(tx,cy+12+jawOpen);
+      c.lineTo(tx-tw,cy+12+jawOpen-th);
+      c.lineTo(tx+tw,cy+12+jawOpen-th);
+      c.closePath();c.fill();c.stroke();
     }
+    // 舌（口腔内红色）
+    c.fillStyle='rgba(180,60,50,'+a*0.5+')';
+    c.beginPath();
+    c.ellipse(cx,cy+5+jawOpen*0.3,12,6,0,0,Math.PI*2);c.fill();
+    // 舌面纹理
+    c.strokeStyle='rgba(140,40,35,'+a*0.3+')';c.lineWidth=0.5;
+    c.beginPath();c.moveTo(cx-6,cy+5+jawOpen*0.3);c.lineTo(cx+6,cy+5+jawOpen*0.3);c.stroke();
+    // 口角（两侧深色）
+    c.fillStyle='rgba(40,15,10,'+a*0.4+')';
+    c.beginPath();c.ellipse(cx-32,cy+2,3,5,0,0,Math.PI*2);c.fill();
+    c.beginPath();c.ellipse(cx+32,cy+2,3,5,0,0,Math.PI*2);c.fill();
     c.restore();
   },
   '又':function(c,p,cx,cy){
-    var a=Math.sin(p*Math.PI);c.save();c.globalAlpha=a;
-    // 又：右手（侧伸三指）
-    c.strokeStyle='rgba(50,32,15,0.8)';c.lineWidth=3;c.lineCap='round';c.lineJoin='round';
-    c.fillStyle='rgba(80,55,25,0.5)';
-    // 手掌+腕
+    var a=Math.sin(p*Math.PI);
+    if(a<0.02)return;
+    c.save();c.globalAlpha=a;
+    c.lineCap='round';c.lineJoin='round';
+    // 写意右手：侧伸三指，掌心纹理，抓握动态
+    // 参考国画手：墨块塑掌、细笔勾指、关节分明
+    var grasp=Math.sin(p*4)*0.15; // 抓握微动
+    // 手掌（侧视，厚实肉感）
+    var palmG=c.createRadialGradient(cx-10,cy,3,cx-5,cy,25);
+    palmG.addColorStop(0,'rgba(180,140,90,'+a*0.7+')');
+    palmG.addColorStop(0.6,'rgba(140,100,60,'+a*0.6+')');
+    palmG.addColorStop(1,'rgba(100,70,40,'+a*0.45+')');
+    c.fillStyle=palmG;
+    c.strokeStyle='rgba(50,32,15,'+a*0.8+')';c.lineWidth=1.5;
     c.beginPath();
-    c.moveTo(cx-30,cy+20);c.quadraticCurveTo(cx-35,cy,cx-20,cy-15-p*3);
-    c.lineTo(cx+5,cy-20-p*5);c.quadraticCurveTo(cx+15,cy-15,cx+10,cy+5);
-    c.quadraticCurveTo(cx,cy+15,cx-25,cy+25);c.closePath();c.fill();c.stroke();
-    // 三指上伸
-    c.lineWidth=2.5;
+    c.moveTo(cx-28,cy+18); // 腕底
+    c.quadraticCurveTo(cx-35,cy+5,cx-30,cy-10); // 腕侧
+    c.quadraticCurveTo(cx-25,cy-18,cx-15,cy-20-p*2); // 掌根
+    c.quadraticCurveTo(cx,cy-22-p*3,cx+8,cy-18-p*4); // 掌指关节
+    c.quadraticCurveTo(cx+15,cy-12,cx+12,cy); // 指根
+    c.quadraticCurveTo(cx+10,cy+12,cx-5,cy+20); // 掌侧
+    c.quadraticCurveTo(cx-18,cy+22,cx-28,cy+18);c.closePath();c.fill();c.stroke();
+    // 掌心纹理（掌纹三线）
+    c.strokeStyle='rgba(80,50,25,'+a*0.35+')';c.lineWidth=0.8;
+    c.beginPath();c.moveTo(cx-20,cy+5);c.quadraticCurveTo(cx-10,cy,cx,cy+2);c.stroke();
+    c.beginPath();c.moveTo(cx-22,cy-2);c.quadraticCurveTo(cx-12,cy-5,cx-2,cy-3);c.stroke();
+    c.beginPath();c.moveTo(cx-18,cy+10);c.quadraticCurveTo(cx-8,cy+8,cx+2,cy+10);c.stroke();
+    // 三指（食、中、无名指，上伸微张）
+    c.fillStyle='rgba(170,130,80,'+a*0.65+')';
+    c.strokeStyle='rgba(50,32,15,'+a*0.8+')';c.lineWidth=1.2;
     for(var i=0;i<3;i++){
-      var fAng=-0.7+i*0.3-Math.sin(p*3+i)*0.05;
-      var fx=cx+5+i*8, fy=cy-20-p*5;
-      c.beginPath();c.moveTo(fx,fy);
-      c.lineTo(fx+Math.cos(fAng)*(18+p*5),fy+Math.sin(fAng)*(18+p*5));c.stroke();
+      var fAng=-0.8+i*0.25+grasp*(i-1);
+      var fx=cx-5+i*8, fy=cy-20-p*2;
+      var fLen=20+p*4+Math.abs(i-1)*3; // 中指最长
+      // 指节（两节）
+      var mx=fx+Math.cos(fAng)*fLen*0.5;
+      var my=fy+Math.sin(fAng)*fLen*0.5;
+      var ex=fx+Math.cos(fAng)*fLen;
+      var ey=fy+Math.sin(fAng)*fLen;
+      // 近节
+      c.beginPath();
+      c.moveTo(fx-3,fy);c.lineTo(mx-2,my);c.lineTo(mx+2,my);c.lineTo(fx+3,fy);c.closePath();c.fill();c.stroke();
+      // 远节
+      c.beginPath();
+      c.moveTo(mx-2,my);c.lineTo(ex-1.5,ey);c.lineTo(ex+1.5,ey);c.lineTo(mx+2,my);c.closePath();c.fill();c.stroke();
+      // 指甲
+      c.fillStyle='rgba(220,190,150,'+a*0.7+')';
+      c.beginPath();c.ellipse(ex,ey,2,1.5,fAng,0,Math.PI*2);c.fill();
+      c.fillStyle='rgba(170,130,80,'+a*0.65+')';
+      // 关节点
+      c.fillStyle='rgba(120,80,45,'+a*0.5+')';
+      c.beginPath();c.arc(mx,my,2,0,Math.PI*2);c.fill();
+      c.fillStyle='rgba(170,130,80,'+a*0.65+')';
     }
-    // 拇指
-    c.beginPath();c.moveTo(cx-10,cy-5);c.quadraticCurveTo(cx-20,cy-15-p*2,cx-25,cy-5);c.stroke();
+    // 拇指（侧伸，与三指相对）
+    var thAng=0.5+grasp;
+    var thLen=15+p*3;
+    var thx=cx-18, thy=cy-8;
+    var thmx=thx+Math.cos(thAng)*thLen*0.5;
+    var thmy=thy+Math.sin(thAng)*thLen*0.5;
+    var thex=thx+Math.cos(thAng)*thLen;
+    var they=thy+Math.sin(thAng)*thLen;
+    // 近节
+    c.beginPath();
+    c.moveTo(thx,thy-3);c.lineTo(thmx,thmy-2);c.lineTo(thmx,thmy+2);c.lineTo(thx,thy+3);c.closePath();c.fill();c.stroke();
+    // 远节
+    c.beginPath();
+    c.moveTo(thmx,thmy-2);c.lineTo(thex,they-1.5);c.lineTo(thex,they+1.5);c.lineTo(thmx,thmy+2);c.closePath();c.fill();c.stroke();
+    // 拇指甲
+    c.fillStyle='rgba(220,190,150,'+a*0.7+')';
+    c.beginPath();c.ellipse(thex,they,2,1.5,thAng,0,Math.PI*2);c.fill();
+    // 腕（下端收束）
+    c.fillStyle='rgba(150,110,70,'+a*0.5+')';
+    c.beginPath();
+    c.moveTo(cx-28,cy+18);c.quadraticCurveTo(cx-30,cy+28,cx-25,cy+35);
+    c.lineTo(cx-15,cy+35);c.quadraticCurveTo(cx-10,cy+28,cx-5,cy+20);c.closePath();c.fill();c.stroke();
     c.restore();
   },
   '父':function(c,p,cx,cy){
-    var a=Math.sin(p*Math.PI);c.save();c.globalAlpha=a;
-    // 父：手持杖/斧（权威）
-    // 手（又）
-    c.strokeStyle='rgba(50,32,15,0.8)';c.lineWidth=2.5;c.lineCap='round';
-    c.fillStyle='rgba(80,55,25,0.5)';
+    var a=Math.sin(p*Math.PI);
+    if(a<0.02)return;
+    c.save();c.globalAlpha=a;
+    c.lineCap='round';c.lineJoin='round';
+    // 写意父亲：持斧/杖，权威形象，人物轮廓
+    // 参考国画人物：墨块塑身、细笔勾面、斧钺在手
+    var bY=cy+15;
+    // 人物身（侧立，持斧姿态）
+    var bodyG=c.createRadialGradient(cx-5,bY-10,3,cx,bY,35);
+    bodyG.addColorStop(0,'rgba(60,42,20,'+a*0.7+')');
+    bodyG.addColorStop(1,'rgba(80,55,30,'+a*0.5+')');
+    c.fillStyle=bodyG;
+    c.strokeStyle='rgba(35,22,10,'+a*0.8+')';c.lineWidth=1.5;
     c.beginPath();
-    c.moveTo(cx-30,cy+15);c.quadraticCurveTo(cx-30,cy,cx-15,cy-10);
-    c.lineTo(cx,cy-15);c.quadraticCurveTo(cx+10,cy-8,cx+5,cy+5);
-    c.quadraticCurveTo(cx-5,cy+15,cx-25,cy+20);c.closePath();c.fill();c.stroke();
-    // 指握杖
-    c.lineWidth=2;
-    for(var i=0;i<3;i++){
-      c.beginPath();c.moveTo(cx-5+i*6,cy-12);c.lineTo(cx+i*6,cy-5);c.stroke();
-    }
-    // 杖/斧柄（长竖）
-    c.strokeStyle='rgba(80,55,25,0.9)';c.lineWidth=3.5;c.lineCap='round';
-    c.beginPath();c.moveTo(cx-5,cy-15);c.lineTo(cx-15-p*5,cy-65-p*15);c.stroke();
-    // 斧/石斧头部
-    var ax=cx-15-p*5,ay=cy-65-p*15;
+    c.moveTo(cx-20,bY+15); // 下摆
+    c.quadraticCurveTo(cx-25,bY,cx-18,bY-15); // 左侧
+    c.quadraticCurveTo(cx-10,bY-25,cx,bY-22); // 肩
+    c.quadraticCurveTo(cx+12,bY-20,cx+15,bY-10); // 右肩
+    c.quadraticCurveTo(cx+18,bY,cx+12,bY+15); // 右侧
+    c.lineTo(cx-20,bY+15);c.closePath();c.fill();c.stroke();
+    // 头（侧视，戴冠）
+    var hx=cx-2,hy=bY-32;
+    c.fillStyle='rgba(150,110,70,'+a*0.65+')';
+    c.strokeStyle='rgba(40,25,12,'+a*0.8+')';c.lineWidth=1.3;
+    c.beginPath();
+    c.moveTo(hx-8,hy+5);
+    c.quadraticCurveTo(hx-10,hy-5,hx-5,hy-10);
+    c.quadraticCurveTo(hx,hy-13,hx+5,hy-10);
+    c.quadraticCurveTo(hx+8,hy-5,hx+6,hy+5);
+    c.quadraticCurveTo(hx,hy+8,hx-8,hy+5);c.closePath();c.fill();c.stroke();
+    // 冠（顶部装饰）
+    c.fillStyle='rgba(80,55,25,'+a*0.7+')';
+    c.beginPath();
+    c.moveTo(hx-4,hy-10);c.lineTo(hx-2,hy-18-p*2);c.lineTo(hx+2,hy-18-p*2);c.lineTo(hx+4,hy-10);c.closePath();c.fill();c.stroke();
+    // 眼（一点墨）
+    c.fillStyle='rgba(20,12,5,'+a+')';
+    c.beginPath();c.arc(hx+2,hy-3,1.2,0,Math.PI*2);c.fill();
+    // 手臂（持斧，前伸）
+    c.strokeStyle='rgba(50,32,15,'+a*0.8+')';c.lineWidth=2.5;
+    c.beginPath();c.moveTo(cx+10,bY-15);c.quadraticCurveTo(cx+20,bY-20,cx+25,bY-25);c.stroke();
+    // 手（握斧柄）
+    c.fillStyle='rgba(140,100,60,'+a*0.6+')';
+    c.beginPath();c.ellipse(cx+25,bY-25,4,3,0.3,0,Math.PI*2);c.fill();c.stroke();
+    // 斧柄（长竖，斜持）
+    c.strokeStyle='rgba(100,70,35,'+a*0.9+')';c.lineWidth=3;
+    c.beginPath();c.moveTo(cx+25,bY-25);c.lineTo(cx+10-p*8,bY-60-p*12);c.stroke();
+    // 斧头（石斧/青铜斧，宽刃）
+    var ax=cx+10-p*8,ay=bY-60-p*12;
     var axG=c.createLinearGradient(ax-15,ay,ax+15,ay);
-    axG.addColorStop(0,'rgba(100,80,40,0.85)');axG.addColorStop(0.5,'rgba(160,140,90,0.9)');axG.addColorStop(1,'rgba(80,60,30,0.85)');
-    c.fillStyle=axG;c.strokeStyle='rgba(50,35,15,0.8)';c.lineWidth=1.5;
-    c.beginPath();c.moveTo(ax-12,ay+5);c.lineTo(ax-18,ay-10-p*2);c.lineTo(ax+10,ay-15-p*3);c.lineTo(ax+12,ay+5);c.closePath();c.fill();c.stroke();
-    // 斧刃光
-    c.strokeStyle='rgba(255,240,200,'+(0.3+Math.sin(p*5)*0.2)+')';c.lineWidth=1;
-    c.beginPath();c.moveTo(ax-15,ay-8-p*2);c.lineTo(ax+8,ay-13-p*3);c.stroke();
+    axG.addColorStop(0,'rgba(120,95,50,'+a*0.85+')');
+    axG.addColorStop(0.5,'rgba(180,155,100,'+a*0.9+')');
+    axG.addColorStop(1,'rgba(100,75,40,'+a*0.85+')');
+    c.fillStyle=axG;c.strokeStyle='rgba(60,40,20,'+a*0.8+')';c.lineWidth=1.5;
+    c.beginPath();
+    c.moveTo(ax-10,ay+3);c.lineTo(ax-15,ay-8-p*2);c.lineTo(ax+8,ay-12-p*3);c.lineTo(ax+10,ay+3);c.closePath();c.fill();c.stroke();
+    // 斧刃光（闪烁）
+    c.strokeStyle='rgba(255,240,200,'+(0.35+Math.sin(p*5)*0.2)+')';c.lineWidth=1;
+    c.beginPath();c.moveTo(ax-12,ay-6-p*2);c.lineTo(ax+6,ay-10-p*3);c.stroke();
+    // 斧背纹（绑缚痕迹）
+    c.strokeStyle='rgba(80,55,25,'+a*0.5+')';c.lineWidth=0.8;
+    c.beginPath();c.moveTo(ax+5,ay-5);c.lineTo(ax+5,ay+2);c.stroke();
+    c.beginPath();c.moveTo(ax+7,ay-6);c.lineTo(ax+7,ay+1);c.stroke();
     c.restore();
   },
   '禾':function(c,p,cx,cy){
-    var a=Math.sin(p*Math.PI);c.save();c.globalAlpha=a;
-    // 禾：成熟谷物（垂穗）
+    var a=Math.sin(p*Math.PI);
+    if(a<0.02)return;
+    c.save();c.globalAlpha=a;
+    c.lineCap='round';c.lineJoin='round';
+    // 写意禾谷：成熟垂穗，风吹摆动，叶片飘摇
+    // 参考国画谷穗：墨线勾茎、淡墨染叶、浓墨点穗
     var bY=cy+50;
-    // 茎
-    c.strokeStyle='rgba(120,90,30,0.8)';c.lineWidth=2.5;c.lineCap='round';
-    c.beginPath();c.moveTo(cx,bY);c.quadraticCurveTo(cx+Math.sin(p*2)*3,bY-20,cx+Math.sin(p*2)*5,bY-55-p*10);c.stroke();
-    // 叶
-    c.fillStyle='rgba(130,110,40,0.5)';c.strokeStyle='rgba(80,60,20,0.6)';c.lineWidth=1;
+    var sway=Math.sin(p*2.5)*4; // 风吹摆动
+    // 地面（淡墨坡）
+    c.fillStyle='rgba(80,60,30,'+a*0.1+')';
+    c.beginPath();c.ellipse(cx,bY+5,35,4,0,0,Math.PI*2);c.fill();
+    // 茎（主茎，微弯）
+    c.strokeStyle='rgba(100,80,30,'+a*0.8+')';c.lineWidth=2.5;
+    c.beginPath();c.moveTo(cx,bY);
+    c.quadraticCurveTo(cx+sway*0.5,bY-25,cx+sway,bY-55-p*10);c.stroke();
+    // 节（茎上节点，3个）
+    c.fillStyle='rgba(80,60,25,'+a*0.6+')';
     for(var i=0;i<3;i++){
-      var ly=bY-15-i*15,ld=(i%2===0?1:-1);
-      c.beginPath();c.moveTo(cx+Math.sin(p*2)*(i*1),ly);
-      c.quadraticCurveTo(cx+ld*15,ly-5,cx+ld*22+p*3,ly+5);
-      c.quadraticCurveTo(cx+ld*10,ly+2,cx,ly);c.fill();c.stroke();
+      var ny=bY-15-i*15;
+      c.beginPath();c.ellipse(cx+sway*(i*0.3),ny,2,1.5,0,0,Math.PI*2);c.fill();
     }
-    // 穗（下垂成熟谷穗）
-    var hx=cx+Math.sin(p*2)*5+5, hy=bY-55-p*10;
-    c.save();c.translate(hx,hy);c.rotate(0.4+p*0.05);
-    c.fillStyle='rgba(200,160,50,0.85)';c.strokeStyle='rgba(120,90,20,0.6)';c.lineWidth=0.8;
-    for(var i=0;i<10;i++){
-      var gy=i*3-p*2;
-      c.beginPath();c.ellipse(-3+i*0.3,gy,2.5,3.5,-0.2+i*0.05,0,Math.PI*2);c.fill();c.stroke();
+    // 叶（3片，左右交替，随风飘摇）
+    c.fillStyle='rgba(110,100,35,'+a*0.55+')';
+    c.strokeStyle='rgba(70,55,20,'+a*0.6+')';c.lineWidth=0.8;
+    for(var i=0;i<3;i++){
+      var ly=bY-12-i*14;
+      var ld=(i%2===0)?1:-1; // 左右交替
+      var leafSway=Math.sin(p*3+i)*3; // 叶片飘摇
+      var lx=cx+sway*(i*0.3);
+      c.beginPath();c.moveTo(lx,ly);
+      c.quadraticCurveTo(lx+ld*12+leafSway,ly-4,lx+ld*20+p*2+leafSway,ly+3);
+      c.quadraticCurveTo(lx+ld*10,ly+2,lx,ly);c.fill();c.stroke();
+      // 叶脉（中脉一线）
+      c.strokeStyle='rgba(60,45,15,'+a*0.3+')';c.lineWidth=0.5;
+      c.beginPath();c.moveTo(lx,ly);c.lineTo(lx+ld*15+leafSway*0.5,ly);c.stroke();
+      c.strokeStyle='rgba(70,55,20,'+a*0.6+')';c.lineWidth=0.8;
+    }
+    // 穗（下垂成熟谷穗，饱满）
+    var hx=cx+sway+3, hy=bY-55-p*10;
+    c.save();c.translate(hx,hy);c.rotate(0.35+p*0.05+sway*0.02);
+    // 穗轴（主穗轴）
+    c.strokeStyle='rgba(90,70,25,'+a*0.7+')';c.lineWidth=1.5;
+    c.beginPath();c.moveTo(0,0);c.lineTo(0,30+p*3);c.stroke();
+    // 穗粒（沿穗轴排列，密集）
+    c.fillStyle='rgba(210,170,55,'+a*0.85+')';
+    c.strokeStyle='rgba(130,100,30,'+a*0.6+')';c.lineWidth=0.6;
+    for(var i=0;i<12;i++){
+      var gy=2+i*2.5-p*2;
+      var gx=Math.sin(i*0.5)*1.5; // 微错开
+      c.beginPath();c.ellipse(gx,gy,2.2,3,-0.15+i*0.03,0,Math.PI*2);c.fill();c.stroke();
+    }
+    // 穗芒（穗粒间细芒）
+    c.strokeStyle='rgba(150,120,40,'+a*0.4+')';c.lineWidth=0.4;
+    for(var i=0;i<8;i++){
+      var my=4+i*3;
+      c.beginPath();c.moveTo(-2,my);c.lineTo(-5,my-2);c.stroke();
+      c.beginPath();c.moveTo(2,my);c.lineTo(5,my-2);c.stroke();
     }
     c.restore();
+    // 辅助茎（两侧细茎，暗示丛植）
+    c.strokeStyle='rgba(100,80,30,'+a*0.4+')';c.lineWidth=1.5;
+    c.beginPath();c.moveTo(cx-8,bY);c.quadraticCurveTo(cx-8+sway*0.3,bY-20,cx-6+sway*0.6,bY-40);c.stroke();
+    c.beginPath();c.moveTo(cx+8,bY);c.quadraticCurveTo(cx+8+sway*0.3,bY-20,cx+10+sway*0.6,bY-42);c.stroke();
     c.restore();
   },
   '黍':function(c,p,cx,cy){
-    var a=Math.sin(p*Math.PI);c.save();c.globalAlpha=a;
-    // 黍：散穗作物（糜子，多穗散开）
+    var a=Math.sin(p*Math.PI);
+    if(a<0.02)return;
+    c.save();c.globalAlpha=a;
+    c.lineCap='round';c.lineJoin='round';
+    // 写意黍（糜子）：散穗作物，多枝散开，穗粒摇曳
+    // 参考国画粟黍：墨线勾茎、散穗下垂、颗粒饱满
     var bY=cy+50;
-    // 茎
-    c.strokeStyle='rgba(100,70,20,0.8)';c.lineWidth=2;c.lineCap='round';
-    c.beginPath();c.moveTo(cx,bY);c.lineTo(cx,bY-50-p*8);c.stroke();
-    // 多分枝散穗
+    var sway=Math.sin(p*2.5)*3; // 风吹摆动
+    // 地面
+    c.fillStyle='rgba(80,60,30,'+a*0.1+')';
+    c.beginPath();c.ellipse(cx,bY+5,30,4,0,0,Math.PI*2);c.fill();
+    // 主茎
+    c.strokeStyle='rgba(90,65,20,'+a*0.8+')';c.lineWidth=2.2;
+    c.beginPath();c.moveTo(cx,bY);
+    c.quadraticCurveTo(cx+sway*0.4,bY-25,cx+sway*0.7,bY-50-p*8);c.stroke();
+    // 节
+    c.fillStyle='rgba(70,50,18,'+a*0.5+')';
+    for(var i=0;i<2;i++){
+      var ny=bY-20-i*15;
+      c.beginPath();c.ellipse(cx+sway*(i*0.2),ny,1.8,1.2,0,0,Math.PI*2);c.fill();
+    }
+    // 叶（2片，左右交替）
+    c.fillStyle='rgba(95,110,35,'+a*0.5+')';
+    c.strokeStyle='rgba(60,70,20,'+a*0.5+')';c.lineWidth=0.7;
+    // 左叶
+    var leafSway1=Math.sin(p*3)*2.5;
+    c.beginPath();c.moveTo(cx+sway*0.2,bY-18);
+    c.quadraticCurveTo(cx-18+leafSway1,bY-22,cx-25+leafSway1,bY-8);
+    c.quadraticCurveTo(cx-10,bY-13,cx+sway*0.2,bY-15);c.fill();c.stroke();
+    // 右叶
+    var leafSway2=Math.sin(p*3+1)*2.5;
+    c.beginPath();c.moveTo(cx+sway*0.4,bY-28);
+    c.quadraticCurveTo(cx+18+leafSway2,bY-35,cx+22+leafSway2,bY-18);
+    c.quadraticCurveTo(cx+10,bY-23,cx+sway*0.4,bY-25);c.fill();c.stroke();
+    // 散穗（4枝，从茎顶散开）
+    var topY=bY-50-p*8;
     for(var i=0;i<4;i++){
-      var brAng=-0.8+i*0.5-Math.sin(p*2+i)*0.05;
-      var brLen=25+p*8;
-      var bx=cx+Math.cos(brAng)*brLen,by=bY-50-p*8+Math.sin(brAng)*brLen;
-      c.lineWidth=1.5;
-      c.beginPath();c.moveTo(cx,bY-50-p*8);c.quadraticCurveTo(cx+Math.cos(brAng)*brLen*0.5,bY-50-p*8+Math.sin(brAng)*brLen*0.5-5,bx,by);c.stroke();
-      // 穗粒
-      c.fillStyle='rgba(140,100,30,0.8)';
-      for(var j=0;j<6;j++){
-        var seed=i*100+j*89;
-        c.beginPath();c.arc(bx+(prand(seed+1)-0.5)*8+Math.sin(p*3+i*6+j)*1.5,by+(prand(seed+2)-0.5)*8+Math.cos(p*2.5+i*6+j)*1.5,1.5+prand(seed+3),0,Math.PI*2);c.fill();
+      var brAng=-0.9+i*0.55;
+      var brLen=22+p*6;
+      var brSway=Math.sin(p*2.5+i*0.8)*2; // 各枝摆动
+      var bx=cx+sway*0.7+Math.cos(brAng)*brLen+brSway;
+      var by=topY+Math.sin(brAng)*brLen;
+      // 穗枝
+      c.strokeStyle='rgba(100,75,25,'+a*0.7+')';c.lineWidth=1.3;
+      c.beginPath();c.moveTo(cx+sway*0.7,topY);
+      c.quadraticCurveTo(cx+sway*0.7+Math.cos(brAng)*brLen*0.5,topY+Math.sin(brAng)*brLen*0.5-3,bx,by);c.stroke();
+      // 穗粒（沿枝排列）
+      c.fillStyle='rgba(150,110,35,'+a*0.8+')';
+      c.strokeStyle='rgba(100,75,25,'+a*0.5+')';c.lineWidth=0.5;
+      for(var j=0;j<7;j++){
+        var t=j/6;
+        var gx=cx+sway*0.7+Math.cos(brAng)*brLen*t+brSway*t;
+        var gy=topY+Math.sin(brAng)*brLen*t-3*(1-t);
+        var sway2=Math.sin(p*3+i*6+j)*1.2;
+        c.beginPath();c.ellipse(gx+sway2,gy,1.8,2.2,brAng+0.2,0,Math.PI*2);c.fill();c.stroke();
+      }
+      // 穗芒
+      c.strokeStyle='rgba(130,95,30,'+a*0.35+')';c.lineWidth=0.4;
+      for(var j=0;j<5;j++){
+        var t=j/4;
+        var mx=cx+sway*0.7+Math.cos(brAng)*brLen*t+brSway*t;
+        var my=topY+Math.sin(brAng)*brLen*t-3*(1-t);
+        c.beginPath();c.moveTo(mx-1,my);c.lineTo(mx-3,my-2);c.stroke();
+        c.beginPath();c.moveTo(mx+1,my);c.lineTo(mx+3,my-2);c.stroke();
       }
     }
-    // 叶
-    c.fillStyle='rgba(100,120,40,0.4)';
-    c.beginPath();c.moveTo(cx,bY-20);c.quadraticCurveTo(cx-20,bY-25,cx-28,bY-10);c.quadraticCurveTo(cx-10,bY-15,cx,bY-15);c.fill();
-    c.beginPath();c.moveTo(cx,bY-30);c.quadraticCurveTo(cx+20,bY-38,cx+25,bY-20);c.quadraticCurveTo(cx+10,bY-25,cx,bY-25);c.fill();
     c.restore();
   },
   '行':function(c,p,cx,cy){
-    var a=Math.sin(p*Math.PI);c.save();c.globalAlpha=a;
-    // 行：十字路口+脚印
-    // 道路
-    c.fillStyle='rgba(120,95,55,0.3)';c.strokeStyle='rgba(80,55,25,0.5)';c.lineWidth=2;
-    c.fillRect(cx-60,cy-8,120,16);c.strokeRect(cx-60,cy-8,120,16);
-    c.fillRect(cx-8,cy-60,16,120);c.strokeRect(cx-8,cy-60,16,120);
-    // 行走脚印
-    for(var i=0;i<5;i++){
-      var step=i*20-p*60;
-      var fA=a*(0.3+Math.sin(i)*0.2);
-      c.fillStyle='rgba(40,25,10,'+fA+')';
+    var a=Math.sin(p*Math.PI);
+    if(a<0.02)return;
+    c.save();c.globalAlpha=a;
+    c.lineCap='round';c.lineJoin='round';
+    // 写意行走：十字路口+脚印+行走人物
+    // 参考国画人物行走：墨块塑身、脚印延伸
+    // 道路（十字交叉）
+    c.fillStyle='rgba(110,85,50,'+a*0.25+')';
+    c.strokeStyle='rgba(70,50,25,'+a*0.4+')';c.lineWidth=1.5;
+    // 横路
+    c.beginPath();
+    c.moveTo(cx-65,cy-10);c.lineTo(cx+65,cy-10);c.lineTo(cx+65,cy+10);c.lineTo(cx-65,cy+10);c.closePath();c.fill();c.stroke();
+    // 纵路
+    c.beginPath();
+    c.moveTo(cx-10,cy-65);c.lineTo(cx+10,cy-65);c.lineTo(cx+10,cy+65);c.lineTo(cx-10,cy+65);c.closePath();c.fill();c.stroke();
+    // 路口中心（略深）
+    c.fillStyle='rgba(90,65,35,'+a*0.3+')';
+    c.fillRect(cx-10,cy-10,20,20);
+    // 脚印（左右交替，从远到近）
+    for(var i=0;i<6;i++){
+      var stepY=cy-50+i*18-p*40; // 脚步位置
+      var fA=a*(0.5-i*0.07); // 远处淡
+      if(stepY<cy-60||stepY>cy+60)continue;
       // 左脚印
-      c.beginPath();c.ellipse(cx-18-i%2*3,cy+step,5,8,0.2-i%2*0.1,0,Math.PI*2);c.fill();
+      c.fillStyle='rgba(35,22,8,'+fA+')';
+      c.beginPath();c.ellipse(cx-15+(i%2)*3,stepY,4.5,7,0.15-(i%2)*0.1,0,Math.PI*2);c.fill();
       // 右脚印
-      c.beginPath();c.ellipse(cx+18+i%2*3,cy+step+10,5,8,-0.2+i%2*0.1,0,Math.PI*2);c.fill();
+      c.beginPath();c.ellipse(cx+15-(i%2)*3,stepY+9,4.5,7,-0.15+(i%2)*0.1,0,Math.PI*2);c.fill();
+      // 趾痕（5个小点）
+      c.fillStyle='rgba(35,22,8,'+fA*0.6+')';
+      for(var t=0;t<3;t++){
+        c.beginPath();c.arc(cx-15+(i%2)*3-2+t*2,stepY-6,0.8,0,Math.PI*2);c.fill();
+        c.beginPath();c.arc(cx+15-(i%2)*3-2+t*2,stepY+3,0.8,0,Math.PI*2);c.fill();
+      }
     }
+    // 行走人物（侧视，迈步姿态）
+    var walkX=cx-10+p*20; // 行走位置
+    var walkY=cy-15;
+    var legSwing=Math.sin(p*6)*4; // 腿部摆动
+    // 身（墨块）
+    var bodyG=c.createRadialGradient(walkX,walkY-5,2,walkX,walkY,15);
+    bodyG.addColorStop(0,'rgba(50,35,15,'+a*0.7+')');
+    bodyG.addColorStop(1,'rgba(70,48,22,'+a*0.5+')');
+    c.fillStyle=bodyG;
+    c.strokeStyle='rgba(30,18,8,'+a*0.75+')';c.lineWidth=1.2;
+    c.beginPath();
+    c.moveTo(walkX-6,walkY+8);
+    c.quadraticCurveTo(walkX-8,walkY-5,walkX-4,walkY-12);
+    c.quadraticCurveTo(walkX,walkY-15,walkX+4,walkY-12);
+    c.quadraticCurveTo(walkX+8,walkY-5,walkX+6,walkY+8);c.closePath();c.fill();c.stroke();
+    // 头
+    c.fillStyle='rgba(140,100,60,'+a*0.65+')';
+    c.beginPath();c.ellipse(walkX,walkY-18,4,5,0,0,Math.PI*2);c.fill();c.stroke();
+    // 腿（迈步）
+    c.strokeStyle='rgba(40,25,10,'+a*0.8+')';c.lineWidth=2;
+    // 前腿
+    c.beginPath();c.moveTo(walkX+2,walkY+5);c.lineTo(walkX+4+legSwing,walkY+18);c.stroke();
+    // 后腿
+    c.beginPath();c.moveTo(walkX-2,walkY+5);c.lineTo(walkX-4-legSwing,walkY+18);c.stroke();
+    // 臂（摆动）
+    c.lineWidth=1.5;
+    c.beginPath();c.moveTo(walkX+3,walkY-8);c.lineTo(walkX+6-legSwing*0.5,walkY-2);c.stroke();
+    c.beginPath();c.moveTo(walkX-3,walkY-8);c.lineTo(walkX-6+legSwing*0.5,walkY-2);c.stroke();
     c.restore();
   },
   '豕':function(c,p,cx,cy){
