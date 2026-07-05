@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Oracle-story</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600;700;900&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
@@ -128,125 +129,164 @@ canvas{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none
 .upload-body{position:relative}
 .upload-main{min-width:0}
 
-/* 四羊方尊二维码挂件（左手边浮动，俯视图） */
+/* 青铜鼎二维码挂件（左手边浮动，俯视图）- 写实商代圆鼎 */
 .ding-qr{
-  position:absolute;left:-44px;top:50%;
+  position:absolute;left:-150px;top:50%;
   transform:translateY(-50%);
-  width:88px;cursor:pointer;
-  z-index:5;
+  width:140px;cursor:pointer;
+  z-index:10;
   transition:transform .3s ease;
+  filter:drop-shadow(0 4px 14px rgba(0,0,0,0.55));
 }
-.ding-qr:hover{transform:translateY(-50%) scale(1.05)}
-.ding-vessel{position:relative;width:88px;height:88px;display:block}
-/* 尊身（方形器身，俯视图外方） */
-.zun-body{
-  position:absolute;left:4px;top:4px;width:80px;height:80px;
-  background:linear-gradient(135deg,#6a5028 0%,#4a3515 40%,#2e210f 100%);
-  border:2px solid #1a0f05;
-  box-shadow:inset 0 0 8px rgba(0,0,0,.5),0 4px 8px rgba(0,0,0,.4);
+.ding-qr:hover{transform:translateY(-50%) scale(1.06)}
+.ding-vessel{position:relative;width:140px;height:140px;display:block}
+/* 鼎耳（左右各一，环形竖耳，俯视如双拱） */
+.ding-handle{
+  position:absolute;top:-6px;width:22px;height:30px;z-index:4;
 }
-/* 尊口（方口侈口，外撇厚沿） */
-.zun-rim{
-  position:absolute;left:0;top:0;width:88px;height:88px;
-  background:linear-gradient(135deg,#c9a662 0%,#9a7a44 35%,#6a4e22 70%,#3a2810 100%);
-  border:2px solid #1a0f05;
-  box-shadow:inset 0 2px 4px rgba(230,200,130,.3),inset 0 -2px 6px rgba(0,0,0,.4);
+.ding-handle::before{
+  content:'';position:absolute;left:2px;top:0;right:2px;bottom:6px;
+  border:3.5px solid #3a2810;border-bottom:none;
+  border-radius:11px 11px 2px 2px;
+  background:linear-gradient(180deg,#8a6830 0%,#5a4020 50%,#3a2810 100%);
+  box-shadow:inset 0 2px 3px rgba(200,160,80,0.25),0 2px 4px rgba(0,0,0,0.4);
 }
-/* 口沿内凹（尊颈内腔） */
-.zun-rim::before{
-  content:'';position:absolute;left:10px;top:10px;right:10px;bottom:10px;
-  background:linear-gradient(135deg,#0e0802 0%,#1a1005 60%);
-  box-shadow:inset 0 2px 8px rgba(0,0,0,.8);
+.ding-handle::after{
+  content:'';position:absolute;left:6px;top:5px;right:6px;bottom:10px;
+  border:2px solid transparent;border-bottom:none;
+  border-radius:7px 7px 0 0;
+  box-shadow:inset 0 0 4px rgba(0,0,0,0.6);
+  background:rgba(20,12,5,0.5);
 }
-/* 蕉叶纹（口沿下四壁的蕉叶纹饰，四条斜线） */
-.zun-rim::after{
-  content:'';position:absolute;left:10px;top:10px;right:10px;bottom:10px;
+.ding-handle.left{left:16px}
+.ding-handle.right{right:16px}
+/* 鼎身（圆形器身，俯视图，青铜质感） */
+.ding-body{
+  position:absolute;left:10px;top:10px;width:120px;height:120px;border-radius:50%;
   background:
-    linear-gradient(135deg,transparent 45%,rgba(200,170,100,.25) 48%,rgba(200,170,100,.25) 52%,transparent 55%),
-    linear-gradient(45deg,transparent 45%,rgba(200,170,100,.25) 48%,rgba(200,170,100,.25) 52%,transparent 55%);
+    radial-gradient(ellipse at 32% 28%,rgba(190,150,80,0.35) 0%,transparent 45%),
+    radial-gradient(ellipse at 68% 72%,rgba(50,35,15,0.45) 0%,transparent 45%),
+    radial-gradient(ellipse at 50% 50%,rgba(120,90,40,0.15) 0%,transparent 70%),
+    linear-gradient(150deg,#5a4020 0%,#3a2810 35%,#2a1a08 65%,#1a0f05 100%);
+  border:2.5px solid #0a0602;
+  box-shadow:
+    inset 0 0 18px rgba(0,0,0,0.65),
+    inset 0 2px 5px rgba(200,160,80,0.18),
+    0 6px 14px rgba(0,0,0,0.55);
+}
+/* 鼎口沿（厚唇外侈，青铜光泽圆环） */
+.ding-rim{
+  position:absolute;left:0;top:0;width:140px;height:140px;border-radius:50%;
+  background:
+    radial-gradient(ellipse at 28% 25%,rgba(220,180,100,0.4) 0%,transparent 38%),
+    radial-gradient(ellipse at 72% 75%,rgba(70,45,15,0.5) 0%,transparent 38%),
+    linear-gradient(150deg,#d4b060 0%,#a07830 22%,#705020 48%,#4a3010 74%,#2a1808 100%);
+  border:3px solid #0a0602;
+  box-shadow:
+    inset 0 3px 8px rgba(240,200,120,0.28),
+    inset 0 -3px 8px rgba(0,0,0,0.45),
+    0 2px 5px rgba(0,0,0,0.35);
+}
+/* 口沿内凹（鼎腹内腔，深邃黑暗） */
+.ding-rim::before{
+  content:'';position:absolute;left:14px;top:14px;right:14px;bottom:14px;border-radius:50%;
+  background:radial-gradient(circle at 45% 42%,#1a1005 0%,#0a0602 55%,#050300 100%);
+  box-shadow:inset 0 4px 12px rgba(0,0,0,0.9),inset 0 -1px 4px rgba(100,70,30,0.18);
+}
+/* 饕餮纹带（口沿下方一圈连续纹饰） */
+.ding-rim::after{
+  content:'';position:absolute;left:10px;top:10px;right:10px;bottom:10px;border-radius:50%;
+  background:
+    repeating-conic-gradient(from 0deg,rgba(180,140,70,0.3) 0deg 8deg,transparent 8deg 16deg),
+    repeating-conic-gradient(from 4deg,rgba(100,70,30,0.2) 0deg 4deg,transparent 4deg 16deg);
+  -webkit-mask:radial-gradient(circle,transparent 62%,black 65%,black 72%,transparent 75%);
+  mask:radial-gradient(circle,transparent 62%,black 65%,black 72%,transparent 75%);
   pointer-events:none;
 }
-/* 四角羊头（四个，方尊四角各一卷角羊，从角向外伸出） */
-.zun-sheep{
-  position:absolute;width:22px;height:22px;z-index:3;
+/* 鼎足（三足，俯视从器身下伸出，120°分布） */
+.ding-leg{
+  position:absolute;width:18px;height:28px;z-index:0;
+  background:linear-gradient(180deg,#4a3015 0%,#2a1808 50%,#1a0f05 100%);
+  border:1.5px solid #0a0602;
+  box-shadow:0 3px 6px rgba(0,0,0,0.45),inset 0 1px 2px rgba(180,140,70,0.15);
 }
-/* 羊头（圆角方形，吻部朝前） */
-.sheep-head{
-  position:absolute;width:14px;height:12px;left:4px;top:6px;
-  border-radius:40% 40% 50% 50%/50% 50% 60% 60%;
-  background:radial-gradient(ellipse at 40% 35%,#a88448,#5a4220 70%,#2e210f);
-  border:1.5px solid #1a0f05;
+.ding-leg::after{
+  content:'';position:absolute;left:3px;right:3px;bottom:0;height:6px;
+  background:radial-gradient(ellipse at 50% 100%,#5a4020 0%,#3a2510 60%,transparent 100%);
+  border-radius:0 0 50% 50%;
 }
-/* 羊眼（两点） */
-.sheep-head::before,.sheep-head::after{
-  content:'';position:absolute;top:4px;width:2px;height:2px;border-radius:50%;
-  background:#0a0602;
-}
-.sheep-head::before{left:3px}
-.sheep-head::after{right:3px}
-/* 羊角（大弯角，从羊头两侧向后弯卷，俯视图为两条弧线） */
-.sheep-horn-l,.sheep-horn-r{
-  position:absolute;width:10px;height:14px;top:0;
-  border:2px solid #1a0f05;border-bottom:none;
-  border-radius:50% 50% 0 0;
-  background:transparent;
-}
-.sheep-horn-l{left:-2px;transform:rotate(-30deg);border-right:none;border-color:#2e1f0a #2e1f0a transparent transparent}
-.sheep-horn-r{right:-2px;transform:rotate(30deg);border-left:none;border-color:#2e1f0a transparent transparent #2e1f0a}
-/* 四个角定位 */
-.zun-sheep.tl{left:-8px;top:-8px;transform:rotate(-45deg)}
-.zun-sheep.tr{right:-8px;top:-8px;transform:rotate(45deg)}
-.zun-sheep.bl{left:-8px;bottom:-8px;transform:rotate(-135deg)}
-.zun-sheep.br{right:-8px;bottom:-8px;transform:rotate(135deg)}
-/* 尊盖（方形盖，覆斗形盖，盖面微鼓，中心有盖钮） */
-.zun-lid{
-  position:absolute;left:8px;top:8px;width:72px;height:72px;
-  background:linear-gradient(135deg,#b89454 0%,#8a6a34 40%,#5a4220 80%);
-  border:2px solid #1a0f05;
-  box-shadow:0 3px 8px rgba(0,0,0,.5),inset 0 2px 4px rgba(230,200,130,.2),inset 0 -2px 4px rgba(0,0,0,.3);
-  transition:transform .5s cubic-bezier(.5,.15,.2,1.1),opacity .3s;
-  transform-origin:100% 100%;
+.ding-leg.top{left:50%;top:-16px;transform:translateX(-50%) rotate(0deg);border-radius:6px 6px 2px 2px}
+.ding-leg.bl{left:4px;bottom:-6px;transform:rotate(-40deg);border-radius:2px 2px 6px 6px}
+.ding-leg.br{right:4px;bottom:-6px;transform:rotate(40deg);border-radius:2px 2px 6px 6px}
+/* 鼎盖（圆盖，微鼓，中心有钮，青铜质感） */
+.ding-lid{
+  position:absolute;left:16px;top:16px;width:108px;height:108px;border-radius:50%;
+  background:
+    radial-gradient(ellipse at 32% 28%,rgba(210,170,90,0.32) 0%,transparent 42%),
+    radial-gradient(ellipse at 68% 72%,rgba(55,38,18,0.42) 0%,transparent 42%),
+    linear-gradient(150deg,#c8a050 0%,#907030 32%,#604020 62%,#3a2510 100%);
+  border:2.5px solid #0a0602;
+  box-shadow:
+    0 5px 12px rgba(0,0,0,0.55),
+    inset 0 2px 6px rgba(220,180,100,0.22),
+    inset 0 -2px 6px rgba(0,0,0,0.35);
+  transition:transform .55s cubic-bezier(.5,.15,.2,1.1),opacity .35s;
+  transform-origin:50% 50%;
   z-index:5;
 }
-/* 盖面十字棱脊 */
-.zun-lid::before{
-  content:'';position:absolute;left:50%;top:4px;bottom:4px;width:2px;
-  background:rgba(0,0,0,.3);transform:translateX(-50%);
+/* 盖面同心圆凸棱（商代青铜器常见装饰） */
+.ding-lid::before{
+  content:'';position:absolute;left:10px;top:10px;right:10px;bottom:10px;border-radius:50%;
+  border:1.5px solid rgba(0,0,0,0.18);
+  box-shadow:0 0 0 10px transparent,inset 0 0 3px rgba(0,0,0,0.12);
 }
-.zun-lid::after{
-  content:'';position:absolute;top:50%;left:4px;right:4px;height:2px;
-  background:rgba(0,0,0,.3);transform:translateY(-50%);
+/* 盖面旋纹（四组对称旋涡纹） */
+.ding-lid::after{
+  content:'';position:absolute;left:18px;top:18px;right:18px;bottom:18px;border-radius:50%;
+  background:
+    radial-gradient(circle at 30% 30%,rgba(0,0,0,0.12) 0%,transparent 20%),
+    radial-gradient(circle at 70% 30%,rgba(0,0,0,0.12) 0%,transparent 20%),
+    radial-gradient(circle at 30% 70%,rgba(0,0,0,0.12) 0%,transparent 20%),
+    radial-gradient(circle at 70% 70%,rgba(0,0,0,0.12) 0%,transparent 20%);
+  pointer-events:none;
 }
-/* 盖钮（方形小捉手） */
+/* 盖钮（环形捉手，居中，如青铜器盖钮） */
 .lid-knob{
   position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
-  width:16px;height:16px;
-  background:radial-gradient(circle at 40% 35%,#d4b472,#7a5a28);
-  border:1.5px solid #1a0f05;
-  border-radius:3px;
+  width:22px;height:22px;border-radius:50%;
+  background:radial-gradient(circle at 38% 32%,#e0c070 0%,#a08040 38%,#604020 75%,#3a2510 100%);
+  border:2.5px solid #0a0602;
   z-index:6;
-  box-shadow:0 1px 3px rgba(0,0,0,.4);
+  box-shadow:
+    0 3px 5px rgba(0,0,0,0.5),
+    inset 0 1px 3px rgba(220,180,100,0.3),
+    inset 0 -1px 2px rgba(0,0,0,0.3);
 }
-.ding-qr.open .zun-lid{
-  transform:translate(-8px,-44px) rotate(-12deg);
-  opacity:.9;
+/* 盖钮内环（捉手中心凹） */
+.lid-knob::after{
+  content:'';position:absolute;left:5px;top:5px;right:5px;bottom:5px;border-radius:50%;
+  background:radial-gradient(circle at 45% 40%,#8a6830 0%,#5a4020 50%,#3a2510 100%);
+  border:1px solid rgba(0,0,0,0.25);
 }
-/* 尊内二维码 */
+.ding-qr.open .ding-lid{
+  transform:translateY(-52px) scale(0.88);
+  opacity:.85;
+}
+/* 鼎内二维码（开盖后可见） */
 .ding-qr-inner{
-  position:absolute;left:18px;top:18px;width:52px;height:52px;
-  border-radius:3px;
+  position:absolute;left:28px;top:28px;width:84px;height:84px;border-radius:50%;
   background:#f5edd6;
   display:flex;align-items:center;justify-content:center;
   overflow:hidden;opacity:0;
-  transition:opacity .4s .1s;
+  transition:opacity .4s .12s;
   z-index:2;
-  box-shadow:inset 0 0 6px rgba(0,0,0,.3);
+  box-shadow:inset 0 0 8px rgba(0,0,0,.3);
 }
 .ding-qr.open .ding-qr-inner{opacity:1}
-.ding-qr-inner canvas{display:block;width:46px!important;height:46px!important}
+.ding-qr-inner canvas{display:block;width:80px!important;height:80px!important}
 /* 下方文字提示 */
 .ding-label{
-  position:absolute;left:50%;top:92px;transform:translateX(-50%);
+  position:absolute;left:50%;top:130px;transform:translateX(-50%);
   font-size:10px;color:var(--muted);white-space:nowrap;
   letter-spacing:1px;text-align:center;line-height:1.3;
   opacity:.8;
@@ -394,8 +434,8 @@ canvas{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none
 }
 
 @media(max-width:600px){
-  .ding-qr{left:-32px;transform:translateY(-50%) scale(.78)}
-  .upload-panel{padding:24px 16px 24px 44px}
+  .ding-qr{left:-40px;transform:translateY(-50%) scale(.72)}
+  .upload-panel{padding:24px 16px 24px 52px}
 }
 </style>
 </head>
@@ -419,24 +459,26 @@ canvas{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none
       <p class="upload-subtitle">上传甲骨文拓片或实物照片，AI辅助识别大致内容</p>
     </div>
     <div class="upload-body">
-      <!-- 四羊方尊二维码挂件（左侧浮动，俯视图） -->
+      <!-- 青铜鼎二维码挂件（左侧浮动，俯视图） -->
       <div class="ding-qr" id="dingQr" title="点击打开，手机扫码上传">
         <div class="ding-vessel">
-          <!-- 尊身方形外框 -->
-          <div class="zun-body"></div>
-          <!-- 尊口方沿（含蕉叶纹） -->
-          <div class="zun-rim"></div>
-          <!-- 四角羊头（卷角羊，各一方） -->
-          <div class="zun-sheep tl"><div class="sheep-horn-l"></div><div class="sheep-horn-r"></div><div class="sheep-head"></div></div>
-          <div class="zun-sheep tr"><div class="sheep-horn-l"></div><div class="sheep-horn-r"></div><div class="sheep-head"></div></div>
-          <div class="zun-sheep bl"><div class="sheep-horn-l"></div><div class="sheep-horn-r"></div><div class="sheep-head"></div></div>
-          <div class="zun-sheep br"><div class="sheep-horn-l"></div><div class="sheep-horn-r"></div><div class="sheep-head"></div></div>
-          <!-- 尊内二维码 -->
+          <!-- 三足（120°分布，从器身下伸出） -->
+          <div class="ding-leg top"></div>
+          <div class="ding-leg bl"></div>
+          <div class="ding-leg br"></div>
+          <!-- 鼎身（圆形器身） -->
+          <div class="ding-body"></div>
+          <!-- 鼎口沿（含饕餮纹带） -->
+          <div class="ding-rim"></div>
+          <!-- 双耳（左右对称环形竖耳） -->
+          <div class="ding-handle left"></div>
+          <div class="ding-handle right"></div>
+          <!-- 鼎内二维码（开盖后可见） -->
           <div class="ding-qr-inner">
-            <canvas id="qrCanvas" width="80" height="80"></canvas>
+            <canvas id="qrCanvas" width="200" height="200"></canvas>
           </div>
-          <!-- 尊盖（方盖，点击滑开） -->
-          <div class="zun-lid">
+          <!-- 鼎盖（圆盖，点击上滑开启） -->
+          <div class="ding-lid">
             <div class="lid-knob"></div>
           </div>
         </div>
@@ -1562,7 +1604,7 @@ function drawInk(){
   if(!S.inkOn&&S.inkOp<0.01&&S.shockOp<0.01)return;
   // 平滑扩散：dt驱动，指数减速（ease-out）
   if(S.inkSpread){
-    var maxE=Math.min(w,h)*0.72; // 覆盖约3/4屏幕
+    var maxE=Math.min(w,h)*0.48; // 进一步缩小扩张尺寸，减少遮挡
     var growRate=(maxE-S.inkR)*3;
     S.inkR+=growRate*S._dt;
     if(S.inkR>maxE*0.98){S.inkR=maxE;S.inkSpread=false;if(!S.expanded){S.expanded=true;updateButtonState();}}
@@ -1642,6 +1684,131 @@ function drawInk(){
       i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
     }
     ctx.closePath();ctx.fill();
+  }
+  // === 水墨云纹扩散效果（增强版）===
+  if(S.inkR>S.r*0.4){
+    var cloudA=S.inkOp*0.5;
+    var progress=Math.min(1,(S.inkR-S.r*0.4)/(S.r*0.6));
+    // 第一层：内圈浓墨旋涡纹（祥云核心）
+    for(var layer=0;layer<5;layer++){
+      var layerR=S.inkR*(0.25+layer*0.14);
+      var layerA=cloudA*(1-layer*0.18)*progress;
+      ctx.save();
+      ctx.globalAlpha=layerA;
+      ctx.strokeStyle='rgba(35,25,15,'+layerA+')';
+      ctx.lineWidth=2.2-layer*0.35;
+      ctx.lineJoin='round';
+      ctx.beginPath();
+      var cloudSteps=80;
+      for(var i=0;i<=cloudSteps;i++){
+        var a=(i/cloudSteps)*Math.PI*2;
+        var wave1=Math.sin(a*2+S.t*0.012+layer*1.3)*14;
+        var wave2=Math.sin(a*5-S.t*0.019+layer*2.1)*8;
+        var wave3=Math.sin(a*8+S.t*0.007+layer*3.7)*4;
+        var wave4=Math.sin(a*13-S.t*0.011+layer*0.8)*2;
+        var spiral=Math.sin(a*3+S.t*0.015+layer*0.5)*6*progress;
+        var r=layerR+wave1+wave2+wave3+wave4+spiral;
+        var x=cx+Math.cos(a)*r,y=cy+Math.sin(a)*r;
+        i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+      }
+      ctx.closePath();ctx.stroke();
+      ctx.restore();
+    }
+    // 第二层：外缘墨韵晕染（水墨渗透渐变）
+    if(S.inkR>S.r*0.6){
+      var bleedA=cloudA*0.25*progress;
+      for(var b=0;b<3;b++){
+        var bleedR=S.inkR*(0.85+b*0.12);
+        var bleedW=8+b*5;
+        ctx.save();
+        ctx.globalAlpha=bleedA*(1-b*0.3);
+        var bg=ctx.createRadialGradient(cx,cy,bleedR-bleedW,cx,cy,bleedR+bleedW);
+        bg.addColorStop(0,'rgba(30,20,12,0)');
+        bg.addColorStop(0.4,'rgba(30,20,12,'+bleedA*0.4+')');
+        bg.addColorStop(0.6,'rgba(40,28,18,'+bleedA*0.6+')');
+        bg.addColorStop(1,'rgba(50,35,22,0)');
+        ctx.fillStyle=bg;
+        ctx.beginPath();
+        var bSteps=72;
+        for(var i=0;i<=bSteps;i++){
+          var a=(i/bSteps)*Math.PI*2;
+          var bw=Math.sin(a*4+S.t*0.01+b*2)*10+Math.sin(a*9-S.t*0.016+b)*5;
+          var r=bleedR+bw,x=cx+Math.cos(a)*r,y=cy+Math.sin(a)*r;
+          i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+        }
+        ctx.closePath();ctx.fill();
+        ctx.restore();
+      }
+    }
+    // 第三层：飞白效果（干笔拖拽断续墨痕）
+    if(S.inkSpread||progress>0.3){
+      var fbA=cloudA*0.45;
+      for(var i=0;i<12;i++){
+        var ang=i*Math.PI*2/12+S.t*0.006;
+        var startR=S.inkR*0.5;
+        var endR=S.inkR*(0.85+Math.sin(S.t*0.015+i*1.7)*0.1);
+        ctx.save();
+        ctx.globalAlpha=fbA*(0.3+Math.sin(i*2.3)*0.3);
+        ctx.strokeStyle='rgba(25,18,10,'+fbA*0.5+')';
+        ctx.lineWidth=1.2+Math.sin(i*3.7)*0.6;
+        ctx.setLineDash([3+Math.sin(i*1.1)*2,4+Math.cos(i*2.3)*3]);
+        ctx.beginPath();
+        for(var j=0;j<=20;j++){
+          var t2=j/20;
+          var fR=startR+(endR-startR)*t2;
+          var fAng=ang+Math.sin(t2*3+i)*0.08;
+          var fx=cx+Math.cos(fAng)*fR;
+          var fy=cy+Math.sin(fAng)*fR;
+          j===0?ctx.moveTo(fx,fy):ctx.lineTo(fx,fy);
+        }
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.restore();
+      }
+    }
+    // 第四层：墨点飞溅（扩散时墨滴+微溅）
+    if(S.inkSpread){
+      for(var i=0;i<14;i++){
+        var ang=i*Math.PI*2/14+S.t*0.008+Math.sin(i*1.3)*0.3;
+        var dist=S.inkR*(0.55+Math.sin(S.t*0.018+i*2.1)*0.15);
+        var fx=cx+Math.cos(ang)*dist;
+        var fy=cy+Math.sin(ang)*dist;
+        var fSize=2+Math.sin(S.t*0.025+i*3)*1.5+Math.sin(i*5)*1;
+        var fA=cloudA*(0.3+Math.sin(i*2.7)*0.2);
+        ctx.fillStyle='rgba(25,18,10,'+fA+')';
+        ctx.beginPath();ctx.arc(fx,fy,Math.max(1,fSize),0,Math.PI*2);ctx.fill();
+        if(i%3===0){
+          for(var k=0;k<3;k++){
+            var sa=ang+Math.sin(k*4+i)*0.5;
+            var sd=dist+8+k*5;
+            ctx.fillStyle='rgba(30,20,12,'+fA*0.4+')';
+            ctx.beginPath();ctx.arc(cx+Math.cos(sa)*sd,cy+Math.sin(sa)*sd,1+Math.sin(k+i)*0.5,0,Math.PI*2);ctx.fill();
+          }
+        }
+      }
+    }
+    // 第五层：祥云卷须（边缘螺旋卷云纹）
+    if(S.inkR>S.r*0.7){
+      var tendrilA=cloudA*0.3*progress;
+      for(var i=0;i<6;i++){
+        var baseAng=i*Math.PI*2/6+S.t*0.005;
+        var baseR=S.inkR*0.9;
+        ctx.save();
+        ctx.globalAlpha=tendrilA*(0.5+Math.sin(i*1.8)*0.3);
+        ctx.strokeStyle='rgba(35,25,15,'+tendrilA*0.6+')';
+        ctx.lineWidth=1.5;ctx.lineCap='round';
+        ctx.beginPath();
+        for(var j=0;j<=24;j++){
+          var t2=j/24;
+          var spiralR=baseR+t2*25;
+          var spiralAng=baseAng+t2*Math.PI*0.8+Math.sin(S.t*0.01+i)*0.15;
+          var tx=cx+Math.cos(spiralAng)*spiralR;
+          var ty=cy+Math.sin(spiralAng)*spiralR;
+          j===0?ctx.moveTo(tx,ty):ctx.lineTo(tx,ty);
+        }
+        ctx.stroke();ctx.restore();
+      }
+    }
   }
   // 墨水粒子只在扩散过程中活动
   if(S.inkSpread){
@@ -5639,30 +5806,42 @@ function getMockDivination(matched){
   return templates[Math.floor(Math.random()*templates.length)];
 }
 
-// 生成装饰性二维码图案
+// 生成真实可扫描二维码（使用qrcode-generator库）
 (function(){
   var cv = document.getElementById('qrCanvas');
   if(!cv)return;
   var cx = cv.getContext('2d');
-  var sz = 80, cells = 21, cellSz = sz/cells;
-  cx.fillStyle = '#f5edd6';
-  cx.fillRect(0,0,sz,sz);
-  cx.fillStyle = '#2a1a0a';
-  // 绘制定位标记（三个角）
-  drawQRMarker(cx, 0, 0, cellSz);
-  drawQRMarker(cx, (cells-7)*cellSz, 0, cellSz);
-  drawQRMarker(cx, 0, (cells-7)*cellSz, cellSz);
-  // 随机数据区域
-  var seed = 42;
-  function pseudoRand(){seed=(seed*16807+0)%2147483647;return seed/2147483647;}
-  for(var y=0;y<cells;y++){
-    for(var x=0;x<cells;x++){
-      // 跳过定位标记区域
-      if((x<8&&y<8)||(x>=cells-8&&y<8)||(x<8&&y>=cells-8)) continue;
-      if(pseudoRand()>0.52){
-        cx.fillRect(x*cellSz, y*cellSz, cellSz*0.9, cellSz*0.9);
+  var sz = cv.width; // 200px高清
+  // 生成真实QR码（编码当前页面地址，手机扫码可访问）
+  var qrUrl = 'http://113.45.210.232:8080';
+  try {
+    var qr = qrcode(0, 'M'); // type 0=auto, error correction M(15%)
+    qr.addData(qrUrl);
+    qr.make();
+    var modules = qr.getModuleCount();
+    var cellSz = sz / modules;
+    // 绘制底色（宣纸色）
+    cx.fillStyle = '#f5edd6';
+    cx.fillRect(0, 0, sz, sz);
+    // 绘制QR码模块（墨色）
+    cx.fillStyle = '#2a1a0a';
+    for(var r = 0; r < modules; r++){
+      for(var c = 0; c < modules; c++){
+        if(qr.isDark(r, c)){
+          cx.fillRect(c*cellSz, r*cellSz, cellSz*1.05, cellSz*1.05);
+        }
       }
     }
+  } catch(e) {
+    // 库加载失败时的降级方案：绘制装饰图案
+    cx.fillStyle = '#f5edd6';
+    cx.fillRect(0, 0, sz, sz);
+    cx.fillStyle = '#2a1a0a';
+    cx.font = 'bold 16px serif';
+    cx.textAlign = 'center';
+    cx.fillText('甲骨文', sz/2, sz/2 - 8);
+    cx.font = '12px serif';
+    cx.fillText('扫码上传', sz/2, sz/2 + 12);
   }
   // 鼎盖点击交互
   var ding=document.getElementById('dingQr');
@@ -5671,22 +5850,11 @@ function getMockDivination(matched){
       e.stopPropagation();
       ding.classList.toggle('open');
     });
-    // 点击页面其他地方关闭
     document.addEventListener('click',function(e){
       if(!ding.contains(e.target))ding.classList.remove('open');
     });
   }
 })();
-
-function drawQRMarker(cx, x, y, cs){
-  // 外框 7x7
-  cx.fillStyle = '#2a1a0a';
-  cx.fillRect(x,y,7*cs,7*cs);
-  cx.fillStyle = '#f5edd6';
-  cx.fillRect(x+cs,y+cs,5*cs,5*cs);
-  cx.fillStyle = '#2a1a0a';
-  cx.fillRect(x+2*cs,y+2*cs,3*cs,3*cs);
-}
 
 })();
 </script>
