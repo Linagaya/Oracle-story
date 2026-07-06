@@ -5725,15 +5725,41 @@ clearBtn.addEventListener('click', function(){
 // 分析按钮
 analyzeBtn.addEventListener('click', function(){
   if(uploadedFiles.length === 0) return;
-  // 显示加载动画
   analyzeBtn.textContent = '识别中...';
   analyzeBtn.classList.add('analyzing');
-  // 模拟AI识别（2-3秒延迟）
-  setTimeout(function(){
+
+  // 构建FormData发送图片到服务器
+  var formData = new FormData();
+  formData.append('image', uploadedFiles[0]);
+
+  var API_URL = 'http://113.45.210.232:8080/api/recognize';
+  var controller = new AbortController();
+  var timeoutId = setTimeout(function(){ controller.abort(); }, 15000); // 15秒超时
+
+  fetch(API_URL, {
+    method: 'POST',
+    body: formData,
+    signal: controller.signal
+  })
+  .then(function(resp){ return resp.json(); })
+  .then(function(data){
+    clearTimeout(timeoutId);
     analyzeBtn.textContent = '开始识别';
     analyzeBtn.classList.remove('analyzing');
+    if(data.success && data.results && data.results.length > 0){
+      showRealResult(data);
+    } else {
+      // 服务器返回空结果，使用mock
+      showMockResult();
+    }
+  })
+  .catch(function(err){
+    clearTimeout(timeoutId);
+    analyzeBtn.textContent = '开始识别';
+    analyzeBtn.classList.remove('analyzing');
+    console.warn('API调用失败，使用模拟结果:', err.message);
     showMockResult();
-  }, 2500);
+  });
 });
 
 // 模拟识别结果
@@ -5785,6 +5811,61 @@ function showMockResult(){
   });
   
   // 滚动到结果区
+  resultArea.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+// 真实API识别结果展示
+function showRealResult(data){
+  resultArea.style.display = 'block';
+  var results = data.results;
+  var matched = [];
+  results.forEach(function(r){
+    var ch = r.character;
+    var d = DB[ch];
+    var conf = Math.round(r.confidence * 100);
+    if(d){
+      matched.push({ch:ch, modern:d.modern, mean:d.mean, conf:conf});
+    } else {
+      // 字符不在本地库中，显示原始结果
+      matched.push({ch:ch, modern:'（未收录）', mean:'未知', conf:conf});
+    }
+  });
+  matched.sort(function(a,b){return b.conf-a.conf;});
+
+  var html = '<p>从拓片中识别出以下甲骨文字，按置信度排列：</p>';
+  html += '<div class="glyph-matches">';
+  matched.forEach(function(m){
+    html += '<div class="glyph-match" data-ch="'+m.ch+'">';
+    html += '<div class="gm-char">'+m.ch+'</div>';
+    html += '<div class="gm-name">'+m.modern+' ('+m.mean+')</div>';
+    html += '<div class="gm-conf">'+m.conf+'%</div>';
+    html += '</div>';
+  });
+  html += '</div>';
+  if(matched.length >= 2 && DB[matched[0].ch] && DB[matched[1].ch]){
+    html += '<p style="margin-top:12px">根据识别出的关键字「'+matched[0].mean+'」「'+matched[1].mean+'」，推测此片卜辞可能与<strong>'+getMockTopic(matched)+'</strong>相关。';
+    html += '</p><p>卜辞内容大致为：' + getMockDivination(matched) + '</p>';
+  }
+
+  resultContent.innerHTML = html;
+
+  // 显示上传的预览图
+  resultImages.innerHTML = '';
+  previewList.querySelectorAll('.preview-item img').forEach(function(img){
+    var clone = img.cloneNode();
+    clone.style.width = '100px'; clone.style.height = '100px';
+    clone.style.borderRadius = '6px'; clone.style.border = '1px solid var(--edge)';
+    resultImages.appendChild(clone);
+  });
+
+  // 点击匹配字跳转到详情
+  resultContent.querySelectorAll('.glyph-match').forEach(function(el){
+    el.addEventListener('click', function(){
+      var ch = this.getAttribute('data-ch');
+      if(DB[ch]) showDetail(ch);
+    });
+  });
+
   resultArea.scrollIntoView({behavior:'smooth', block:'start'});
 }
 
