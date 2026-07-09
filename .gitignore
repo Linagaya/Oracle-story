@@ -84,3 +84,19 @@ node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Deploy
+deploy_sftp.py
+*.pem
+demo_post.html
+demo_post_text.md
+post_screenshot_*.png
+dogfood-output/
+resume_site/
+latest_resume.md
+new_resume.md
+ecs-key.pem
+server/model_output/
+server/deploy.sh
+server/requirements.txt
+frontend/oracle_sphere.html
