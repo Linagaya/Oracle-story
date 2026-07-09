@@ -3,9 +3,6 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [master, main]
-    paths:
-      - 'docs/**'
-      - 'frontend/oracle_scroll.html'
   workflow_dispatch:
 
 permissions:
@@ -26,10 +23,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Sync docs from frontend
-        run: |
-          cp frontend/oracle_scroll.html docs/index.html
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
