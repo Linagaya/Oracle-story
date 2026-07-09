@@ -5770,7 +5770,8 @@ analyzeBtn.addEventListener('click', function(){
   var formData = new FormData();
   formData.append('image', uploadedFiles[0]);
 
-  var API_URL = 'http://113.45.210.232:8080/api/recognize';
+  // 相对路径：ECS Nginx 代理 /api/ -> Flask:8080；静态托管平台走 mock 降级
+  var API_URL = '/api/recognize';
   var controller = new AbortController();
   var timeoutId = setTimeout(function(){ controller.abort(); }, 15000); // 15秒超时
 
@@ -5931,7 +5932,8 @@ function getMockDivination(matched){
   var cx = cv.getContext('2d');
   var sz = cv.width; // 200px高清
   // 生成真实QR码（编码当前页面地址，手机扫码可访问）
-  var qrUrl = 'http://113.45.210.232:8080';
+  // QR码指向当前部署地址，手机扫码可直接访问
+  var qrUrl = window.location.origin;
   try {
     var qr = qrcode(0, 'M'); // type 0=auto, error correction M(15%)
     qr.addData(qrUrl);
